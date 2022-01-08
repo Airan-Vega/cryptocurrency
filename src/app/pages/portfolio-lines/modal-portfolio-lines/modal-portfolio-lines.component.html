@@ -4,7 +4,7 @@
   </h1>
 </div>
 <div class="modal-body">
-  <form id="form" autocomplete="off" [formGroup]="form" (ngSubmit)="save()">
+  <form id="form" autocomplete="off" [formGroup]="form">
     <div class="form-group m-t-40">
       <div class="col-xs-12">
         <label for="amount" class="form-label"
@@ -15,8 +15,12 @@
           type="number"
           id="amount"
           formControlName="amount"
+          min="0"
         />
       </div>
+      <p *ngIf="form.value.amount < 0" class="text-danger">
+        Deber ser como mínimo cero
+      </p>
     </div>
     <div class="form-group m-t-40">
       <div class="col-xs-12">

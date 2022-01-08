@@ -28,7 +28,7 @@ export class ModalPortfolioLinesComponent implements OnInit, OnDestroy {
     id: new FormControl(uid(), Validators.required),
     portfolioId: new FormControl(null, Validators.required),
     coinId: new FormControl(null, Validators.required),
-    amount: new FormControl(null, Validators.required),
+    amount: new FormControl(null, [Validators.required, Validators.min(0)]),
   });
 
   constructor(
