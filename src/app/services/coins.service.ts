@@ -36,7 +36,7 @@ export class CoinsService {
       .get<boolean>('https://min-api.cryptocompare.com/data/all/coinlist')
       .pipe(
         map((resp: any) => {
-          return Object.keys(resp.Data).includes(acronym);
+          return resp.Data[acronym];
         })
       );
   }

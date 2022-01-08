@@ -62,8 +62,8 @@ export class CoinsComponent implements OnInit, OnDestroy {
       this.coinsService
         .coinNoExiste(data.acronym)
         .pipe(takeUntil(this.destroy$))
-        .subscribe((r) => {
-          if (!r) {
+        .subscribe((r: any) => {
+          if (!r || r.CoinName !== data.name) {
             this.errorCoinNoExiste('Error al crear el Coin');
           } else {
             this.coinsService
@@ -94,8 +94,8 @@ export class CoinsComponent implements OnInit, OnDestroy {
       this.coinsService
         .coinNoExiste(data.acronym)
         .pipe(takeUntil(this.destroy$))
-        .subscribe((r) => {
-          if (!r) {
+        .subscribe((r: any) => {
+          if (!r || r.CoinName !== data.name) {
             this.errorCoinNoExiste('Error al actualizar el Coin');
           } else {
             this.coinsService
@@ -170,7 +170,7 @@ export class CoinsComponent implements OnInit, OnDestroy {
     Swal.fire({
       icon: 'error',
       title,
-      text: 'No existe un coin con este acronimo',
+      text: 'No existe un coin con este nombre o acronimo',
     });
   }
 }
