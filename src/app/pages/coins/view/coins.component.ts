@@ -1,14 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
 
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import Swal from 'sweetalert2';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { CoinsService } from '../../../services/coins.service';
 import { ICoin } from '../../../models/coin';
-import { HttpErrorResponse } from '@angular/common/http';
 import { ModalCoinsComponent } from '../modal-coins/modal-coins.component';
+import { MessagesService } from '../../../services/messages.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -19,11 +19,11 @@ export class CoinsComponent implements OnInit, OnDestroy {
   private destroy$: Subject<boolean> = new Subject<boolean>();
 
   public error: any = '';
-
   public coins: ICoin[] = [];
   constructor(
     private coinsService: CoinsService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private messageService: MessagesService
   ) {}
 
   ngOnInit(): void {
@@ -45,12 +45,10 @@ export class CoinsComponent implements OnInit, OnDestroy {
         },
         (err: HttpErrorResponse) => {
           this.error = err;
-          console.warn(err);
-          Swal.fire({
-            icon: 'error',
-            title: 'Error en la petición de la API',
-            text: 'Esta sección estara desabilitada hasta que se arregle el error ',
-          });
+          this.messageService.errorApi(
+            'Esta sección estara desabilitada hasta que se arregle el error',
+            err
+          );
         }
       );
   }
@@ -64,7 +62,10 @@ export class CoinsComponent implements OnInit, OnDestroy {
         .pipe(takeUntil(this.destroy$))
         .subscribe((r: any) => {
           if (!r || r.CoinName !== data.name) {
-            this.errorCoinNoExiste('Error al crear el Coin');
+            this.messageService.errorNoExiste(
+              'Error al crear el Coin',
+              'No existe un coin con este nombre o acronimo'
+            );
           } else {
             this.coinsService
               .createCoins(data)
@@ -72,11 +73,11 @@ export class CoinsComponent implements OnInit, OnDestroy {
               .subscribe(
                 () => {
                   this.coins.push(data);
-                  Swal.fire('Guardado', 'Coin creado exitosamente', 'success');
+                  this.messageService.guardar('Coin creado exitosamente');
                 },
                 (err: HttpErrorResponse) => {
-                  this.errorApi(
-                    'La creación de coins estara desabilitada hasta que se arregle el error',
+                  this.messageService.errorApi(
+                    'No podra crear coins hasta que se arregle el error',
                     err
                   );
                 }
@@ -96,7 +97,10 @@ export class CoinsComponent implements OnInit, OnDestroy {
         .pipe(takeUntil(this.destroy$))
         .subscribe((r: any) => {
           if (!r || r.CoinName !== data.name) {
-            this.errorCoinNoExiste('Error al actualizar el Coin');
+            this.messageService.errorNoExiste(
+              'Error al actualizar el Coin',
+              'No existe un coin con este nombre o acronimo'
+            );
           } else {
             this.coinsService
               .updateCoin(data.id, data)
@@ -104,15 +108,13 @@ export class CoinsComponent implements OnInit, OnDestroy {
               .subscribe(
                 () => {
                   this.cargarCoins();
-                  Swal.fire(
-                    'Actualizado',
-                    'Coin actualizado correctamente',
-                    'success'
+                  this.messageService.actualizar(
+                    'Coin actualizado correctamente'
                   );
                 },
                 (err: HttpErrorResponse) => {
-                  this.errorApi(
-                    'La creación de coins estara desabilitada hasta que se arregle el error',
+                  this.messageService.errorApi(
+                    'No podra actualizar coins hasta que se arregle el error',
                     err
                   );
                 }
@@ -123,54 +125,29 @@ export class CoinsComponent implements OnInit, OnDestroy {
   }
 
   eliminarCoin(coin: ICoin) {
-    Swal.fire({
-      title: '¿Borrar Coin?',
-      text: `Esta a punto de borrar ${coin.name}`,
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Si, borrar coin',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.coinsService
-          .deleteCoin(coin.id)
-          .pipe(takeUntil(this.destroy$))
-          .subscribe(
-            () => {
-              Swal.fire(
-                'Coin borrado',
-                `${coin.name} fue eliminado correctamente`,
-                'success'
-              );
-              this.coins = this.coins.filter((resp) => resp.id !== coin.id);
-            },
-            (err: HttpErrorResponse) => {
-              this.errorApi(
-                'No podra eliminar coins hasta que se arregle el error',
-                err
-              );
-            }
-          );
-      }
-    });
-  }
-
-  private errorApi(message: string, err: HttpErrorResponse) {
-    this.error = err;
-    console.warn(err);
-    Swal.fire({
-      icon: 'error',
-      title: 'Error en la petición de la API',
-      text: message,
-    });
-  }
-
-  private errorCoinNoExiste(title: string) {
-    Swal.fire({
-      icon: 'error',
-      title,
-      text: 'No existe un coin con este nombre o acronimo',
-    });
+    this.messageService
+      .confirmar('¿Borrar Coin?', `Esta a punto de borrar ${coin.name}`)
+      .then((result) => {
+        if (result.isConfirmed) {
+          this.coinsService
+            .deleteCoin(coin.id)
+            .pipe(takeUntil(this.destroy$))
+            .subscribe(
+              () => {
+                this.messageService.borrar(
+                  'Coin borrado',
+                  `${coin.name} fue eliminado correctamente`
+                );
+                this.coins = this.coins.filter((resp) => resp.id !== coin.id);
+              },
+              (err: HttpErrorResponse) => {
+                this.messageService.errorApi(
+                  'No podra eliminar coins hasta que se arregle el error',
+                  err
+                );
+              }
+            );
+        }
+      });
   }
 }

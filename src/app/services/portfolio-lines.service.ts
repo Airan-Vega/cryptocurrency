@@ -15,4 +15,16 @@ export class PortfolioLinesService {
   getPortfolioLines() {
     return this.http.get<IPortfolioLine[]>(`${path_url}/lines`);
   }
+
+  createPortfolioLine(coins: IPortfolioLine) {
+    return this.http.post<IPortfolioLine[]>(`${path_url}/lines`, coins);
+  }
+
+  updatePortfolioLine(id: number, coins: IPortfolioLine) {
+    return this.http.patch<IPortfolioLine[]>(`${path_url}/lines/${id}`, coins);
+  }
+
+  deletePortfolioLine(id: number) {
+    return this.http.delete(`${path_url}/lines/${id}`);
+  }
 }

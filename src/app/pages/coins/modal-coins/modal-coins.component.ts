@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup, Validators, FormControl } from '@angular/forms';
+
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { uid } from 'uid';
-import { ICoin } from '../../../models/coin';
 
 @Component({
   selector: 'app-modal-coins',
@@ -35,7 +35,7 @@ export class ModalCoinsComponent implements OnInit {
     let { id, acronym, name } = this.form.value;
 
     acronym = acronym.toUpperCase();
-    name = name[0].toUpperCase() + name.substring(1);
+    name = name[0].toUpperCase() + name.substring(1).toLowerCase();
     this.modal.close({ id, acronym, name });
   }
 }
