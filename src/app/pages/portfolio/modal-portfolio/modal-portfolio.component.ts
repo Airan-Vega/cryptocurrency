@@ -7,7 +7,6 @@ import { uid } from 'uid';
 @Component({
   selector: 'app-modal-portfolio',
   templateUrl: './modal-portfolio.component.html',
-  styleUrls: ['./modal-portfolio.component.scss'],
 })
 export class ModalPortfolioComponent implements OnInit {
   @Input() title: any;

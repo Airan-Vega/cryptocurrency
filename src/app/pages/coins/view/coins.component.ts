@@ -13,7 +13,6 @@ import { MessagesService } from '../../../services/messages.service';
 @Component({
   selector: 'app-dashboard',
   templateUrl: './coins.component.html',
-  styleUrls: ['./coins.component.scss'],
 })
 export class CoinsComponent implements OnInit, OnDestroy {
   private destroy$: Subject<boolean> = new Subject<boolean>();

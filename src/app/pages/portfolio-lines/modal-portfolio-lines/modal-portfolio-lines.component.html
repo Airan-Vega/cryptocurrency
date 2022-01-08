@@ -1,0 +1,54 @@
+<div class="modal-header">
+  <h1>
+    {{ title }}
+  </h1>
+</div>
+<div class="modal-body">
+  <form id="form" autocomplete="off" [formGroup]="form" (ngSubmit)="save()">
+    <div class="form-group m-t-40">
+      <div class="col-xs-12">
+        <label for="amount" class="form-label"
+          >Amount <span class="text-danger">*</span></label
+        >
+        <input
+          class="form-control"
+          type="number"
+          id="amount"
+          formControlName="amount"
+        />
+      </div>
+    </div>
+    <div class="form-group m-t-40">
+      <div class="col-xs-12">
+        <label class="form-label"
+          >Portfolio <span class="text-danger">*</span></label
+        >
+        <select class="custom-select" formControlName="portfolioId">
+          <option value="" disabled>Seleccione un Portfolio</option>
+          <option *ngFor="let portfolio of portfolios" [ngValue]="portfolio.id">
+            {{ portfolio.name }}
+          </option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group m-t-40">
+      <div class="col-xs-12">
+        <label class="form-label"
+          >Coin <span class="text-danger">*</span></label
+        >
+        <select class="custom-select" formControlName="coinId">
+          <option value="" disabled>Seleccione un Coin</option>
+          <option *ngFor="let coin of coins" [ngValue]="coin.id">
+            {{ coin.name }}
+          </option>
+        </select>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-secondary" (click)="modal.dismiss()">Cancel</button>
+  <button class="btn btn-primary" (click)="save()" [disabled]="form.invalid">
+    Save
+  </button>
+</div>

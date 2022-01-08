@@ -27,4 +27,10 @@ export class PortfolioLinesService {
   deletePortfolioLine(id: number) {
     return this.http.delete(`${path_url}/lines/${id}`);
   }
+
+  getValorCoin(coin: string) {
+    return this.http.get<{ EUR: number }>(
+      `https://min-api.cryptocompare.com/data/price?fsym=${coin}&tsyms=EUR`
+    );
+  }
 }

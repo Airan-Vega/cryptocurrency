@@ -7,7 +7,6 @@ import { uid } from 'uid';
 @Component({
   selector: 'app-modal-coins',
   templateUrl: './modal-coins.component.html',
-  styleUrls: ['./modal-coins.component.scss'],
 })
 export class ModalCoinsComponent implements OnInit {
   @Input() title: any;

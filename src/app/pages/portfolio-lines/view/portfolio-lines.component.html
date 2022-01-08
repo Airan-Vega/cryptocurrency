@@ -1,1 +1,64 @@
-<p>portfolio-lines works!</p>
+<div class="row">
+  <div class="col-8">
+    <h1>Portfolio line</h1>
+  </div>
+  <div class="col">
+    <div class="text-right">
+      <button class="btn btn-primary" (click)="crearPortfolioLine()">
+        Crear portfolios lines
+      </button>
+    </div>
+  </div>
+  <hr />
+</div>
+
+<div
+  class="d-flex justify-content-center"
+  *ngIf="portfolioLines.length === 0 && error === ''"
+>
+  <div class="spinner-border" role="status">
+    <span class="sr-only">Loading...</span>
+  </div>
+</div>
+
+<table class="table table-striped" *ngIf="portfolioLines.length > 0">
+  <thead>
+    <tr>
+      <th scope="col">ID Portfolio Line</th>
+      <th scope="col">Coin</th>
+      <th scope="col">Acronimo</th>
+      <th scope="col">Portfolio</th>
+      <th scope="col">Amount</th>
+      <th scope="col">Valor EUR</th>
+      <th scope="col">Amount total EUR</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let portfolioLine of portfolioLines">
+      <th scope="row">{{ portfolioLine.id }}</th>
+      <td>{{ portfolioLine.coin }}</td>
+      <td>{{ portfolioLine.acronym }}</td>
+      <td>{{ portfolioLine.portfolio }}</td>
+      <td>{{ portfolioLine.amount }}</td>
+      <td>{{ portfolioLine.euro | number: "1.0-2" }}</td>
+      <td>{{ portfolioLine.valorTotalEuro | number: "1.0-0" }}</td>
+
+      <td>
+        <button
+          type="button"
+          class="btn btn-warning mr-3"
+          (click)="editarPortFolioLine(portfolioLine)"
+        >
+          Editar
+        </button>
+        <button
+          type="button"
+          class="btn btn-danger"
+          (click)="eliminarPortfolioLine(portfolioLine)"
+        >
+          Eliminar
+        </button>
+      </td>
+    </tr>
+  </tbody>
+</table>
